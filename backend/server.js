@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import colors from 'colors';
 import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
+import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
 
 dotenv.config();
 connectDB();
@@ -13,6 +14,14 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/products', productRoutes);
+
+// req can't match any api's url above:
+// having 404 error, and passing the error msg into the next middleware.
+app.use(notFound);
+
+// Error handlers: error-handling middleware defining last
+// means it connect to the api but it throws an error from inside.
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
