@@ -11,7 +11,7 @@ import {
   Button,
   Card
 } from 'react-bootstrap';
-import { addToCart } from '../redux/cart/cartAction';
+import { addToCart, removeFromCart } from '../redux/cart/cartAction';
 
 const CartPage = ({ match, location, history }) => {
   const productId = match.params.id;
@@ -28,7 +28,7 @@ const CartPage = ({ match, location, history }) => {
   }, [dispatch, productId, qty]);
 
   const removeFromCartHandler = id => {
-    console.log('removed');
+    dispatch(removeFromCart(id));
   };
 
   const checkoutHandler = () => {
@@ -66,9 +66,9 @@ const CartPage = ({ match, location, history }) => {
                         )
                       }
                     >
-                      {[...Array(item.countInStock).keys()].map(x => (
-                        <option key={x + 1} value={x + 1}>
-                          {x + 1}
+                      {[...Array(item.countInStock).keys()].map(index => (
+                        <option key={index + 1} value={index + 1}>
+                          {index + 1}
                         </option>
                       ))}
                     </Form.Control>
