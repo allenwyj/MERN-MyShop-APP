@@ -13,7 +13,7 @@ import {
 import Rating from '../components/Rating';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { listProductDetailsActions } from '../redux/productDetails/productDetailsAction';
+import { listProductDetailsActions } from '../redux/productDetails/productDetailsActions';
 
 const ProductPage = ({ history, match }) => {
   const [qty, setQty] = useState(0);
@@ -95,6 +95,7 @@ const ProductPage = ({ history, match }) => {
                               returns a new Array Iterator object 
                               that contains the keys for each index in the array */}
                           {[...Array(product.countInStock).keys()].map(x => (
+                            // BUG: default selected
                             <option key={x + 1} value={x + 1}>
                               {x + 1}
                             </option>
