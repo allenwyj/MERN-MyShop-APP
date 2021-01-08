@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import productListActionTypes from './productListActionTypes';
 
 export const productListActions = () => async dispatch => {
