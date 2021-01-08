@@ -3,6 +3,7 @@ import productListActionTypes from './productListActionTypes';
 const INITIAL_STATE = {
   products: []
 };
+
 const productListReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case productListActionTypes.PRODUCT_LIST_REQUEST:
