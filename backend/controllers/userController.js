@@ -11,6 +11,7 @@ const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
+    // sending user info with token
     res.json({
       _id: user._id,
       name: user.name,
@@ -24,18 +25,25 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Fetch single product
-// @route   GET /api/products/:id
+// @desc    Get user profile
+// @route   GET /api/users/profile
 // @access  Public
-// const getProductById = asyncHandler(async (req, res) => {
-//   const product = await Product.findById(req.params.id);
-//   if (product) {
-//     res.json(product);
-//   } else {
-//     res.status(404);
-//     // throws error and gets it handled by errorHandler
-//     throw new Error('Product not found');
-//   }
-// });
+const getUserProfile = asyncHandler(async (req, res) => {
+  // find a user by using email.
+  const user = await User.findById(req.user._id);
+  if (user) {
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
 
-export { authUser };
+
+
+export { authUser, getUserProfile };
