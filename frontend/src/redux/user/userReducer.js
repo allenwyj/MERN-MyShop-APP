@@ -4,6 +4,8 @@ const INITIAL_STATE = { loading: false, error: null };
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case userActionTypes.USER_CLEAR_ERROR:
+      return { ...state, error: null, loading: false };
     case userActionTypes.USER_LOGIN_REQUEST:
     case userActionTypes.USER_REGISTER_REQUEST:
       return { ...state, loading: true };

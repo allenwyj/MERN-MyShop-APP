@@ -6,6 +6,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import FormContainer from '../components/FormContainer';
 import { loginUser } from '../redux/user/userActions';
+import userActionTypes from '../redux/user/userActionTypes';
 
 const LoginPage = ({ history, location }) => {
   const [email, setEmail] = useState('');
@@ -15,6 +16,13 @@ const LoginPage = ({ history, location }) => {
   const { loading, error, userInfo } = currentUser;
 
   const redirect = location.search ? location.search.split('=')[1] : '/';
+
+  useEffect(() => {
+    return () =>
+      dispatch({
+        type: userActionTypes.USER_CLEAR_ERROR
+      });
+  }, [dispatch]);
 
   useEffect(() => {
     // if there is a currentUser login, then redirect to home page.
