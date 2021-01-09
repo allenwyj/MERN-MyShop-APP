@@ -18,7 +18,8 @@ const userSchema = mongoose.Schema(
     },
     isAdmin: {
       type: Boolean,
-      required: false
+      required: true,
+      default: false
     }
   },
   {
@@ -29,6 +30,16 @@ const userSchema = mongoose.Schema(
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
+
+// encrypt password before saving it into the db
+userSchema.pre('save', async function (next) {
+  // only update password when password field is gonna be modified.
+  if (!this.isModified('password')) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
 const User = mongoose.model('User', userSchema);
 
