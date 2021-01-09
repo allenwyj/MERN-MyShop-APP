@@ -1,7 +1,7 @@
 import productDetailsActionTypes from './productDetailsActionTypes';
 
 const INITIAL_STATE = {
-  product: { reviews: [] }
+  product: { loading: false, error: null, reviews: [] }
 };
 
 const productDetailsReducer = (state = INITIAL_STATE, action) => {
@@ -9,9 +9,9 @@ const productDetailsReducer = (state = INITIAL_STATE, action) => {
     case productDetailsActionTypes.PRODUCT_DETAILS_REQUEST:
       return { ...state, loading: true };
     case productDetailsActionTypes.PRODUCT_DETAILS_SUCCESS:
-      return { loading: false, product: action.payload };
+      return { ...state, loading: false, product: action.payload, error: null };
     case productDetailsActionTypes.PRODUCT_DETAILS_FAIL:
-      return { loading: false, error: action.payload };
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }

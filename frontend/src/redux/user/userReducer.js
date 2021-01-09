@@ -1,20 +1,28 @@
 import userActionTypes from './userActionTypes';
 
-const INITIAL_STATE = {};
+const INITIAL_STATE = { loading: false, error: null };
 
-const userLoginReducer = (state = INITIAL_STATE, action) => {
+const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case userActionTypes.USER_LOGIN_REQUEST:
-      return { loading: true };
+    case userActionTypes.USER_REGISTER_REQUEST:
+      return { ...state, loading: true };
     case userActionTypes.USER_LOGIN_SUCCESS:
-      return { loading: false, userInfo: action.payload };
+    case userActionTypes.USER_REGISTER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        userInfo: action.payload,
+        error: null
+      };
     case userActionTypes.USER_LOGIN_FAIL:
-      return { loading: false, error: action.payload };
+    case userActionTypes.USER_REGISTER_FAIL:
+      return { ...state, loading: false, error: action.payload };
     case userActionTypes.USER_LOGOUT:
-      return {};
+      return { ...state, error: null, userInfo: null };
     default:
       return state;
   }
 };
 
-export default userLoginReducer;
+export default userReducer;

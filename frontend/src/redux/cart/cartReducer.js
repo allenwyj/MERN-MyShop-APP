@@ -1,7 +1,9 @@
 import cartActionTypes from './cartActionTypes';
 
 const INITIAL_STATE = {
-  cartItems: []
+  cartItems: [],
+  loading: false,
+  error: null
 };
 
 const cartReducer = (state = INITIAL_STATE, action) => {
