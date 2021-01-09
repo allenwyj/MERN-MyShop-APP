@@ -1,8 +1,13 @@
 import express from 'express';
 const router = express.Router();
-import { authUser, getUserProfile } from '../controllers/userController.js';
+import {
+  authUser,
+  registerUser,
+  getUserProfile
+} from '../controllers/userController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 
+router.route('/').post(registerUser);
 router.post('/login', authUser);
 // passing authMiddleware into the first argument
 // protect middleware will run when this route is hitted
