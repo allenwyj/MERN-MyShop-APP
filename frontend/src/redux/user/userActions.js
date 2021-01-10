@@ -103,6 +103,7 @@ export const getUserDetail = id => async (dispatch, getState) => {
       }
     };
 
+    // /api/users/profile can take the user details by token
     const { data } = await axios.get(`/api/users/${id}`, config);
 
     dispatch({
@@ -145,11 +146,6 @@ export const updateUserProfile = user => async (dispatch, getState) => {
       payload: data
     });
 
-    // update currentUser
-    dispatch({
-      type: userActionTypes.USER_LOGIN_SUCCESS,
-      payload: data
-    });
     localStorage.setItem('userInfo', JSON.stringify(data));
   } catch (error) {
     dispatch({

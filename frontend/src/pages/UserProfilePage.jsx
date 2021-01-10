@@ -16,15 +16,13 @@ const UserProfilePage = ({ history }) => {
   const [message, setMessage] = useState(null);
 
   const currentUser = useSelector(state => state.currentUser);
-  const { userInfo } = currentUser;
+  const { loading, error, userInfo, success } = currentUser;
 
-  const userDetails = useSelector(state => state.userDetails);
-  const { loading, error, user, success } = userDetails;
-
+  // componentWillUnmount
   useEffect(() => {
     // reset
     return () => {
-      dispatch({ type: userActionTypes.USER_UPDATE_PROFILE_RESET });
+      dispatch({ type: userActionTypes.USER_CLEAR_ERROR });
     };
   }, [dispatch]);
 
@@ -33,24 +31,26 @@ const UserProfilePage = ({ history }) => {
     if (!userInfo) {
       history.push('/login');
     } else {
-      if (!user || !user.name) {
+      if (!userInfo.email || !userInfo.name) {
         // /api/users/profile - fetching login user's profile
         dispatch(getUserDetail('profile'));
       } else {
-        setName(user.name);
-        setEmail(user.email);
+        setName(userInfo.name);
+        setEmail(userInfo.email);
       }
     }
-  }, [dispatch, history, userInfo, user]);
+  }, [dispatch, history, userInfo]);
 
   const onSubmitHandler = e => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      dispatch({ type: userActionTypes.USER_UPDATE_PROFILE_SUCCESS_RESET });
+      dispatch({ type: userActionTypes.USER_CLEAR_ERROR });
       setMessage('Passwords do not match');
     } else {
-      dispatch(updateUserProfile({ id: user._id, name, email, password }));
+      dispatch(updateUserProfile({ id: userInfo._id, name, email, password }));
       setMessage(null);
+      setPassword('');
+      setConfirmPassword('');
     }
   };
 
