@@ -32,7 +32,7 @@ const CartPage = ({ match, location, history }) => {
   };
 
   const checkoutHandler = () => {
-    // if login, go shipping, if not login, go login
+    // if login, go shipping, if not login, go login after user signin
     history.push('/login?redirect=shipping');
   };
 
