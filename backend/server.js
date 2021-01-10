@@ -4,6 +4,7 @@ import colors from 'colors';
 import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/orders', orderRoutes);
 
 // req can't match any api's url above:
 // having 404 error, and passing the error msg into the next middleware.
