@@ -4,12 +4,25 @@ import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import CheckoutSteps from '../components/CheckoutSteps';
+import { createOrder } from '../redux/order/orderActions';
+import orderActionTypes from '../redux/order/orderActionTypes';
 
-const PlaceOrderPage = () => {
+const PlaceOrderPage = ({ history }) => {
   const dispatch = useDispatch();
   const cart = useSelector(state => state.cart);
+  const { order, success, error } = useSelector(state => state.order);
 
-  const error = '';
+  useEffect(() => {
+    return () => dispatch({ type: orderActionTypes.ORDER_RESET });
+  }, [dispatch]);
+
+  // jump to the order detail page if placing order is successful
+  useEffect(() => {
+    if (success) {
+      history.push(`/order/${order._id}`);
+    }
+    // eslint-disable-next-line
+  }, [history, success]);
 
   // calculate total prices in the cart
   const addDecimals = num => {
@@ -28,7 +41,25 @@ const PlaceOrderPage = () => {
   ).toFixed(2);
 
   const placeOrderHandler = () => {
-    console.log('order');
+    if (!cart.paymentMethod) {
+      dispatch({
+        type: orderActionTypes.ORDER_CREATE_FAIL,
+        payload: 'Payment method is empty!'
+      });
+    } else if (!cart.shippingAddress) {
+      dispatch({
+        type: orderActionTypes.ORDER_CREATE_FAIL,
+        payload: 'Shipping address is empty!'
+      });
+    } else {
+      const { cartItems, ...rest } = cart;
+      dispatch(
+        createOrder({
+          orderItems: cartItems,
+          ...rest
+        })
+      );
+    }
   };
 
   return (
