@@ -15,7 +15,7 @@ import { addToCart, removeFromCart } from '../redux/cart/cartAction';
 
 const CartPage = ({ match, location, history }) => {
   const productId = match.params.id;
-  const qty = location.search ? Number(location.search.split('?qty=')[1]) : 1;
+  const qty = location.search ? Number(location.search.split('=')[1]) : 1;
 
   const dispatch = useDispatch();
   const cart = useSelector(state => state.cart);
@@ -47,7 +47,7 @@ const CartPage = ({ match, location, history }) => {
         ) : (
           <ListGroup variant="flush">
             {cartItems.map(item => (
-              <ListGroup.Item key={item.productId}>
+              <ListGroup.Item key={item.product}>
                 <Row>
                   <Col md={2}>
                     <Image src={item.image} alt={item.name} fluid rounded />
