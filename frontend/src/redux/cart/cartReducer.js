@@ -2,8 +2,7 @@ import cartActionTypes from './cartActionTypes';
 
 const INITIAL_STATE = {
   cartItems: [],
-  loading: false,
-  error: null
+  shippingAddress: { address: '', suburb: '', postcode: '', country: '' }
 };
 
 const cartReducer = (state = INITIAL_STATE, action) => {
