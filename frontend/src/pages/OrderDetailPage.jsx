@@ -10,6 +10,7 @@ import { getOrderDetails } from '../redux/order/orderActions';
 import orderActionTypes from '../redux/order/orderActionTypes';
 
 const OrderDetailPage = ({ match }) => {
+  console.log('1');
   const dispatch = useDispatch();
 
   const orderDetails = useSelector(state => state.order);
@@ -26,13 +27,10 @@ const OrderDetailPage = ({ match }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    // order does not exist or order id aren't matched
-    if (!order || order._id !== orderId) {
-      console.log('Fired');
-      // re-refetch the order
-      dispatch(getOrderDetails(orderId));
-    } 
-  }, [order, orderId, dispatch]);
+    console.log('Fired');
+    // re-refetch the order
+    dispatch(getOrderDetails(orderId));
+  }, [orderId, dispatch]);
 
   return loading ? (
     <Loader />

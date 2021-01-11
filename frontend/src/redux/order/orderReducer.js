@@ -14,7 +14,6 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: true,
-        success: false,
         error: null
       };
     case orderActionTypes.ORDER_CREATE_SUCCESS:
@@ -35,7 +34,6 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        order: { orderItems: [], shippingAddress: {} },
         error: action.payload
       };
     case orderActionTypes.ORDER_RESET:
