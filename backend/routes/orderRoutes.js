@@ -3,11 +3,13 @@ const router = express.Router();
 import {
   addOrderItems,
   getOrderById,
-  updateOrderToPaid
+  updateOrderToPaid,
+  getMyOrders
 } from '../controllers/orderController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 
 router.route('/').post(protect, addOrderItems);
+router.route('/myorders').get(protect, getMyOrders);
 // should place after '/' route, otherwise,
 // anything after '/' will be reconginised as id.
 router.route('/:id').get(protect, getOrderById);
