@@ -1,4 +1,5 @@
 import userActionTypes from './userActionTypes';
+import orderActionTypes from '../order/orderActionTypes';
 import axios from 'axios';
 
 export const loginUser = (email, password) => async dispatch => {
@@ -19,6 +20,7 @@ export const loginUser = (email, password) => async dispatch => {
       { email, password },
       config
     );
+    console.log(data);
 
     dispatch({
       type: userActionTypes.USER_LOGIN_SUCCESS,
@@ -41,6 +43,11 @@ export const logoutUser = () => dispatch => {
   dispatch({
     type: userActionTypes.USER_LOGOUT
   });
+
+  dispatch({
+    type: orderActionTypes.ORDER_MY_LIST_RESET
+  });
+
   localStorage.removeItem('userInfo');
 };
 
