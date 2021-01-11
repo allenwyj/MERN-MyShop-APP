@@ -13,7 +13,10 @@ const PlaceOrderPage = ({ history }) => {
   const { order, success, error } = useSelector(state => state.order);
 
   useEffect(() => {
-    return () => dispatch({ type: orderActionTypes.ORDER_RESET });
+    return () => {
+      console.log('place order page reset');
+      dispatch({ type: orderActionTypes.ORDER_RESET });
+    };
   }, [dispatch]);
 
   // jump to the order detail page if placing order is successful

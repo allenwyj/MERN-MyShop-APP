@@ -34,3 +34,36 @@ export const createOrder = order => async (dispatch, getState) => {
     });
   }
 };
+
+export const getOrderDetails = id => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: orderActionTypes.ORDER_DETAILS_REQUEST
+    });
+
+    const {
+      currentUser: { userInfo }
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`
+      }
+    };
+
+    const { data } = await axios.get(`/api/orders/${id}`, config);
+
+    dispatch({
+      type: orderActionTypes.ORDER_DETAILS_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    dispatch({
+      type: orderActionTypes.ORDER_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? 'Sorry, we cannot find this order.'
+          : error.message
+    });
+  }
+};
