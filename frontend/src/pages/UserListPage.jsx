@@ -4,19 +4,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 
-import { listUsers } from '../redux/user/userActions';
+import { deleteUser, listUsers } from '../redux/user/userActions';
 
 import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button } from 'react-bootstrap';
+import { disable } from 'colors';
 
 const UserListPage = ({ history }) => {
   const dispatch = useDispatch();
 
+  const currentUser = useSelector(state => state.currentUser);
+  const { userInfo } = currentUser;
+
   const userList = useSelector(state => state.userList);
   const { loading, error, users } = userList;
 
-  const currentUser = useSelector(state => state.currentUser);
-  const { userInfo } = currentUser;
+  const userListModify = useSelector(state => state.userListModify);
+  const {
+    loading: modifyLoading,
+    error: modifyError,
+    success: modifySuccess
+  } = userListModify;
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
@@ -24,9 +32,13 @@ const UserListPage = ({ history }) => {
     } else {
       history.push('/login');
     }
-  }, [dispatch, history, userInfo]);
+  }, [dispatch, history, userInfo, modifySuccess]);
 
-  const deleteHandler = () => {};
+  const deleteHandler = id => {
+    if (window.confirm('Confirm to delete user: ' + id)) {
+      dispatch(deleteUser(id));
+    }
+  };
 
   return (
     <React.Fragment>
@@ -36,7 +48,7 @@ const UserListPage = ({ history }) => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Table striped bordered hover responsive className="table-sm">
+        <Table striped bordered hover responsive size="sm">
           <thead>
             <tr>
               <th>id</th>
@@ -71,6 +83,7 @@ const UserListPage = ({ history }) => {
                     variant="danger"
                     className="btn-sm"
                     onClick={() => deleteHandler(user._id)}
+                    disabled={user._id === userInfo._id}
                   >
                     <i className="fas fa-trash"></i>
                   </Button>

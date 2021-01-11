@@ -7,7 +7,11 @@ import {
   orderPayReducer,
   orderMyListReducer
 } from './order/orderReducer';
-import { currentUserReducer, userListReducer } from './user/userReducer';
+import {
+  currentUserReducer,
+  userListReducer,
+  userListModifyReducer
+} from './user/userReducer';
 
 const rootReducer = combineReducers({
   productList: productListReducer,
@@ -15,6 +19,7 @@ const rootReducer = combineReducers({
   cart: cartReducer,
   currentUser: currentUserReducer,
   userList: userListReducer,
+  userListModify: userListModifyReducer,
   order: orderReducer,
   orderPay: orderPayReducer,
   orderMyList: orderMyListReducer
