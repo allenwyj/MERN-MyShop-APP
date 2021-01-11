@@ -9,15 +9,22 @@ import { listUsers } from '../redux/user/userActions';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button } from 'react-bootstrap';
 
-const UserListPage = () => {
+const UserListPage = ({ history }) => {
   const dispatch = useDispatch();
 
   const userList = useSelector(state => state.userList);
   const { loading, error, users } = userList;
 
+  const currentUser = useSelector(state => state.currentUser);
+  const { userInfo } = currentUser;
+
   useEffect(() => {
-    dispatch(listUsers());
-  }, [dispatch]);
+    if (userInfo && userInfo.isAdmin) {
+      dispatch(listUsers());
+    } else {
+      history.push('/login');
+    }
+  }, [dispatch, history, userInfo]);
 
   const deleteHandler = () => {};
 

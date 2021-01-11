@@ -45,6 +45,10 @@ export const logoutUser = () => dispatch => {
   });
 
   dispatch({
+    type: userActionTypes.USER_LIST_RESET
+  });
+
+  dispatch({
     type: orderActionTypes.ORDER_MY_LIST_RESET
   });
 
