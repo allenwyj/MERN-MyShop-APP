@@ -1,36 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import day from 'dayjs';
+import { PayPalButton } from 'react-paypal-button-v2';
 import { Link } from 'react-router-dom';
 import { Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { getOrderDetails } from '../redux/order/orderActions';
+import { getOrderDetails, payOrder } from '../redux/order/orderActions';
 import orderActionTypes from '../redux/order/orderActionTypes';
 
 const OrderDetailPage = ({ match }) => {
-  console.log('1');
   const dispatch = useDispatch();
+  const [sdkReady, setSdkReady] = useState(false);
 
   const orderDetails = useSelector(state => state.order);
   const { order, loading, error } = orderDetails;
 
+  const orderPay = useSelector(state => state.orderPay);
+  const { loading: loadingPay, success: successPay } = orderPay;
+
   const orderId = match.params.id;
 
-  // reset the order reducer
   useEffect(() => {
+    // fetch the order details when the component is mounted
+    dispatch(getOrderDetails(orderId));
+
+    // reset the order reducer
     return () => {
       console.log('detail page reset');
       dispatch({ type: orderActionTypes.ORDER_RESET });
     };
-  }, [dispatch]);
+  }, [dispatch, orderId]);
 
   useEffect(() => {
-    console.log('Fired');
-    // re-refetch the order
-    dispatch(getOrderDetails(orderId));
-  }, [orderId, dispatch]);
+    // add paypal script into the body
+    const addPaypalScript = async () => {
+      const { data: clientId } = await axios.get('/api/config/paypal');
+      console.log('Adding Paypal Script');
+
+      // create script tag
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+      script.async = true;
+      script.onload = () => {
+        setSdkReady(true);
+      };
+      document.body.appendChild(script);
+    };
+
+    if (successPay) {
+      // reset the orderPay state
+      dispatch({ type: orderActionTypes.ORDER_PAY_RESET });
+      // re-fetch the order details from the db
+      dispatch(getOrderDetails(orderId));
+    } else if (order._id && !order.isPaid) {
+      console.log('Checking paypal adding...');
+      // If paypal script is not added into the body tag
+      if (!window.paypal) {
+        addPaypalScript();
+
+        // paypal script tag is already in the body tag
+      } else {
+        console.log('Paypal is already in.');
+        // happens when user paid and checkout for other products,
+        // change the component state into true.
+        setSdkReady(true);
+      }
+    }
+  }, [orderId, order, successPay, dispatch]);
+
+  const successPaymentHandler = paymentResult => {
+    console.log(paymentResult);
+    dispatch(payOrder(orderId, paymentResult));
+  };
 
   return loading ? (
     <Loader />
@@ -52,7 +96,7 @@ const OrderDetailPage = ({ match }) => {
                 <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
               </p>
               <p>
-                <strong>Address:</strong>
+                <strong>Address: </strong>
                 {order.shippingAddress.address}, {order.shippingAddress.suburb}{' '}
                 {order.shippingAddress.postcode},{' '}
                 {order.shippingAddress.country}
@@ -72,7 +116,9 @@ const OrderDetailPage = ({ match }) => {
                 {order.paymentMethod}
               </p>
               {order.isPaid ? (
-                <Message variant="success">Paid on {order.paidAt}</Message>
+                <Message variant="success">
+                  Paid on {day(order.payAt).format('HH:mm:ss DD/MM/YYYY')}
+                </Message>
               ) : (
                 <Message variant="warning">Not Paid</Message>
               )}
@@ -148,6 +194,19 @@ const OrderDetailPage = ({ match }) => {
                   <Col>${order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
+              {!order.isPaid && (
+                <ListGroup.Item>
+                  {loadingPay && <Loader />}
+                  {!sdkReady ? (
+                    <Loader />
+                  ) : (
+                    <PayPalButton
+                      amount={order.totalPrice}
+                      onSuccess={successPaymentHandler}
+                    />
+                  )}
+                </ListGroup.Item>
+              )}
             </ListGroup>
           </Card>
         </Col>

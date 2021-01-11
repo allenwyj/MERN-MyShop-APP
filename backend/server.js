@@ -22,6 +22,10 @@ app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 
+app.get('/api/config/paypal', (req, res) =>
+  res.send(process.env.PAYPAL_CLIENT_ID)
+);
+
 // req can't match any api's url above:
 // having 404 error, and passing the error msg into the next middleware.
 app.use(notFound);
