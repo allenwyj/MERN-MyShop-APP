@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 
-const protect = asyncHandler(async (req, res, next) => {
+export const protect = asyncHandler(async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -32,4 +32,13 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { protect };
+export const isAdmin = (req, res, next) => {
+  if (req.user && req.user.isAdmin) {
+    // only move into the next step when it is admin
+    next();
+  } else {
+    // not authorised
+    res.status(401);
+    throw new Error('Not authorised as an admin');
+  }
+};

@@ -13,6 +13,7 @@ import ShippingPage from './pages/ShippingPage';
 import PaymentPage from './pages/PaymentPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
 import OrderDetailPage from './pages/OrderDetailPage';
+import UserListPage from './pages/UserListPage';
 
 const App = () => {
   return (
@@ -22,14 +23,15 @@ const App = () => {
         <main className="py-3">
           <Container>
             <Route path="/login" exact component={LoginPage} />
+            <Route path="/register" exact component={RegisterPage} />
+            <Route path="/profile" exact component={UserProfilePage} />
             <Route path="/shipping" exact component={ShippingPage} />
             <Route path="/placeorder" exact component={PlaceOrderPage} />
             <Route path="/order/:id" exact component={OrderDetailPage} />
-            <Route path="/register" exact component={RegisterPage} />
-            <Route path="/profile" exact component={UserProfilePage} />
             <Route path="/payment" exact component={PaymentPage} />
             <Route path="/product/:id" exact component={ProductPage} />
             <Route path="/cart/:id?" component={CartPage} />
+            <Route path="/admin/userlist" exact component={UserListPage} />
             <Route path="/" component={HomePage} exact />
           </Container>
         </main>

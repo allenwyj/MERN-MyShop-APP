@@ -7,13 +7,14 @@ import {
   orderPayReducer,
   orderMyListReducer
 } from './order/orderReducer';
-import { currentUserReducer } from './user/userReducer';
+import { currentUserReducer, userListReducer } from './user/userReducer';
 
 const rootReducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
   cart: cartReducer,
   currentUser: currentUserReducer,
+  userList: userListReducer,
   order: orderReducer,
   orderPay: orderPayReducer,
   orderMyList: orderMyListReducer
