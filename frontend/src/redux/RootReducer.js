@@ -10,7 +10,8 @@ import {
 import {
   currentUserReducer,
   userListReducer,
-  userListModifyReducer
+  userListModifyReducer,
+  userInfoReducer
 } from './user/userReducer';
 
 const rootReducer = combineReducers({
@@ -20,6 +21,8 @@ const rootReducer = combineReducers({
   currentUser: currentUserReducer,
   userList: userListReducer,
   userListModify: userListModifyReducer,
+  // for admin modifies users
+  userInfo: userInfoReducer,
   order: orderReducer,
   orderPay: orderPayReducer,
   orderMyList: orderMyListReducer

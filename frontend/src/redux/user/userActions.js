@@ -20,7 +20,6 @@ export const loginUser = (email, password) => async dispatch => {
       { email, password },
       config
     );
-    console.log(data);
 
     dispatch({
       type: userActionTypes.USER_LOGIN_SUCCESS,
@@ -224,6 +223,85 @@ export const deleteUser = id => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: userActionTypes.USER_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    });
+  }
+};
+
+export const updateUser = user => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: userActionTypes.USER_UPDATE_REQUEST
+    });
+
+    const {
+      currentUser: { userInfo }
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`
+      }
+    };
+
+    const { data } = await axios.put(`/api/users/${user._id}`, user, config);
+
+    dispatch({ type: userActionTypes.USER_INFO_SUCCESS, payload: data });
+
+    // Updating the login admin
+    if (user._id === userInfo._id) {
+      const newUserInfo = { ...data, token: userInfo.token };
+      dispatch({
+        type: userActionTypes.USER_LOGIN_SUCCESS,
+        payload: newUserInfo
+      });
+      localStorage.setItem('userInfo', JSON.stringify(newUserInfo));
+    }
+
+    dispatch({ type: userActionTypes.USER_UPDATE_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: userActionTypes.USER_UPDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    });
+  }
+};
+
+export const getUserInfo = id => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: userActionTypes.USER_INFO_REQUEST
+    });
+
+    const {
+      currentUser: { userInfo }
+    } = getState();
+
+    // sending the content-type in headers
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`
+      }
+    };
+
+    // /api/users/profile can take the user details by token
+    const { data } = await axios.get(`/api/users/${id}`, config);
+
+    dispatch({
+      type: userActionTypes.USER_INFO_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    dispatch({
+      type: userActionTypes.USER_INFO_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

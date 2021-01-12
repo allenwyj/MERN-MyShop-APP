@@ -29,7 +29,7 @@ const UserListPage = ({ history }) => {
 
   useEffect(() => {
     return () => {
-      dispatch({ type: userActionTypes.USER_MODIFY_RESET });
+      dispatch({ type: userActionTypes.USER_DELETE_RESET });
     };
   }, [dispatch]);
 
@@ -51,7 +51,7 @@ const UserListPage = ({ history }) => {
     <React.Fragment>
       <h1>Users</h1>
       {modifyLoading ? (
-        <Message variant="primary">
+        <Message variant="info">
           <Spinner as="span" animation="border" size="sm" /> Updating...
         </Message>
       ) : modifySuccess ? (

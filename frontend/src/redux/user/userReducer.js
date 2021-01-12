@@ -83,14 +83,35 @@ export const userListModifyReducer = (state = {}, action) => {
   switch (action.type) {
     // TODO: when admin deletes a user, it shouldn't request users list twice
     // since during sending request, it sets success back to null.
-    case userActionTypes.USER_MODIFY_RESET:
+    case userActionTypes.USER_UPDATE_RESET:
+    case userActionTypes.USER_DELETE_RESET:
       return {};
+    case userActionTypes.USER_UPDATE_REQUEST:
     case userActionTypes.USER_DELETE_REQUEST:
       return { loading: true };
+    case userActionTypes.USER_UPDATE_SUCCESS:
     case userActionTypes.USER_DELETE_SUCCESS:
       return { loading: false, success: true };
+    case userActionTypes.USER_UPDATE_FAIL:
     case userActionTypes.USER_DELETE_FAIL:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+// For admin updates user details
+// TODO: may be combine with currentUser detail reducer.
+export const userInfoReducer = (state = { user: {} }, action) => {
+  switch (action.type) {
+    case userActionTypes.USER_INFO_REQUEST:
+      return { ...state, loading: true };
+    case userActionTypes.USER_INFO_SUCCESS:
+      return { loading: false, user: action.payload };
+    case userActionTypes.USER_INFO_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case userActionTypes.USER_INFO_RESET:
+      return { user: {} };
     default:
       return state;
   }
