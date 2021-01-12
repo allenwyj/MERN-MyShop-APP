@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Message from '../components/Message';
 import Loader from '../components/Loader';
+import { Spinner } from 'react-bootstrap';
 
 import { deleteUser, listUsers } from '../redux/user/userActions';
 
 import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button } from 'react-bootstrap';
-import { disable } from 'colors';
+import userActionTypes from '../redux/user/userActionTypes';
 
 const UserListPage = ({ history }) => {
   const dispatch = useDispatch();
@@ -27,6 +28,12 @@ const UserListPage = ({ history }) => {
   } = userListModify;
 
   useEffect(() => {
+    return () => {
+      dispatch({ type: userActionTypes.USER_MODIFY_RESET });
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(listUsers());
     } else {
@@ -43,6 +50,17 @@ const UserListPage = ({ history }) => {
   return (
     <React.Fragment>
       <h1>Users</h1>
+      {modifyLoading ? (
+        <Message variant="primary">
+          <Spinner as="span" animation="border" size="sm" /> Updating...
+        </Message>
+      ) : modifySuccess ? (
+        <Message variant="success">Success!</Message>
+      ) : modifyError ? (
+        <Message variant="danger">Updated Fail</Message>
+      ) : (
+        <React.Fragment></React.Fragment>
+      )}
       {loading ? (
         <Loader />
       ) : error ? (

@@ -81,6 +81,10 @@ export const userListReducer = (state = { users: [] }, action) => {
 
 export const userListModifyReducer = (state = {}, action) => {
   switch (action.type) {
+    // TODO: when admin deletes a user, it shouldn't request users list twice
+    // since during sending request, it sets success back to null.
+    case userActionTypes.USER_MODIFY_RESET:
+      return {};
     case userActionTypes.USER_DELETE_REQUEST:
       return { loading: true };
     case userActionTypes.USER_DELETE_SUCCESS:
