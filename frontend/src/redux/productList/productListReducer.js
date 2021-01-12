@@ -6,7 +6,7 @@ const INITIAL_STATE = {
   error: null
 };
 
-const productListReducer = (state = INITIAL_STATE, action) => {
+export const productListReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case productListActionTypes.PRODUCT_LIST_REQUEST:
       return { ...state, loading: true, products: [] };
@@ -24,4 +24,15 @@ const productListReducer = (state = INITIAL_STATE, action) => {
   }
 };
 
-export default productListReducer;
+export const productDeleteReducer = (state = {}, action) => {
+  switch (action.type) {
+    case productListActionTypes.PRODUCT_DELETE_REQUEST:
+      return { loading: true };
+    case productListActionTypes.PRODUCT_DELETE_SUCCESS:
+      return { loading: false, success: true };
+    case productListActionTypes.PRODUCT_DELETE_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
