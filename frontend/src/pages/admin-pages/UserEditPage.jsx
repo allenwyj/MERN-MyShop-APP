@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { getUserInfo, updateUser } from '../redux/user/userActions';
-import userActionTypes from '../redux/user/userActionTypes';
+import { getUserInfo, updateUser } from '../../redux/user/userActions';
+import userActionTypes from '../../redux/user/userActionTypes';
 
-import Message from '../components/Message';
-import Loader from '../components/Loader';
-import FormContainer from '../components/FormContainer';
+import Message from '../../components/Message';
+import Loader from '../../components/Loader';
+import FormContainer from '../../components/FormContainer';
 
 import { Form, Button, Spinner } from 'react-bootstrap';
 

@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Message from '../components/Message';
-import Loader from '../components/Loader';
+import Message from '../../components/Message';
+import Loader from '../../components/Loader';
 import { Spinner } from 'react-bootstrap';
 
-import { deleteUser, listUsers } from '../redux/user/userActions';
+import { deleteUser, listUsers } from '../../redux/user/userActions';
+import userActionTypes from '../../redux/user/userActionTypes';
 
 import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button } from 'react-bootstrap';
-import userActionTypes from '../redux/user/userActionTypes';
 
 const UserListPage = ({ history }) => {
   const dispatch = useDispatch();

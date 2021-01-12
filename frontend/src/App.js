@@ -13,8 +13,8 @@ import ShippingPage from './pages/ShippingPage';
 import PaymentPage from './pages/PaymentPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
 import OrderDetailPage from './pages/OrderDetailPage';
-import UserListPage from './pages/UserListPage';
-import UserEditPage from './pages/UserEditPage';
+import UserListPage from './pages/admin-pages/UserListPage';
+import UserEditPage from './pages/admin-pages/UserEditPage';
 
 const App = () => {
   return (
