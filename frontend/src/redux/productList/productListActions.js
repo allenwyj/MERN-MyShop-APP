@@ -1,7 +1,7 @@
 import axios from 'axios';
 import productListActionTypes from './productListActionTypes';
 
-export const productListActions = () => async dispatch => {
+export const listProductsFromProductList = () => async dispatch => {
   try {
     dispatch({
       type: productListActionTypes.PRODUCT_LIST_REQUEST
@@ -20,6 +20,43 @@ export const productListActions = () => async dispatch => {
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message
+    });
+  }
+};
+
+export const createProductToProductList = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: productListActionTypes.PRODUCT_CREATE_REQUEST
+    });
+
+    const {
+      currentUser: { userInfo }
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`
+      }
+    };
+
+    const { data } = await axios.post(`/api/products`, {}, config);
+
+    dispatch({
+      type: productListActionTypes.PRODUCT_CREATE_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    // if (message === 'Not authorized, token failed') {
+    //   dispatch(logout());
+    // }
+    dispatch({
+      type: productListActionTypes.PRODUCT_CREATE_FAIL,
+      payload: message
     });
   }
 };

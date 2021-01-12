@@ -4,7 +4,7 @@ import { Col, Row } from 'react-bootstrap';
 import Product from '../components/Product';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { productListActions } from '../redux/productList/productListActions';
+import { listProductsFromProductList } from '../redux/productList/productListActions';
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -12,7 +12,7 @@ const HomePage = () => {
   const { loading, error, products } = productList;
 
   useEffect(() => {
-    dispatch(productListActions());
+    dispatch(listProductsFromProductList());
   }, [dispatch]);
 
   return (
