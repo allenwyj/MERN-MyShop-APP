@@ -61,6 +61,48 @@ export const createProductToProductList = () => async (dispatch, getState) => {
   }
 };
 
+export const updateProductFromProductList = product => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: productListActionTypes.PRODUCT_UPDATE_REQUEST
+    });
+
+    const {
+      currentUser: { userInfo }
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`
+      }
+    };
+
+    const { data } = await axios.put(
+      `/api/products/${product._id}`,
+      product,
+      config
+    );
+
+    dispatch({
+      type: productListActionTypes.PRODUCT_UPDATE_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({
+      type: productListActionTypes.PRODUCT_UPDATE_FAIL,
+      payload: message
+    });
+  }
+};
+
 export const deleteProductFromProductList = id => async (
   dispatch,
   getState

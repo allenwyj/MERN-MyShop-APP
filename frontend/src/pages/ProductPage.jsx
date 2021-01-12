@@ -13,7 +13,7 @@ import {
 import Rating from '../components/Rating';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { listProductDetailsActions } from '../redux/productDetails/productDetailsActions';
+import { listProductDetails } from '../redux/productDetails/productDetailsActions';
 
 const ProductPage = ({ history, match }) => {
   const [qty, setQty] = useState(1);
@@ -24,7 +24,7 @@ const ProductPage = ({ history, match }) => {
 
   useEffect(() => {
     const id = match.params.id;
-    dispatch(listProductDetailsActions(id));
+    dispatch(listProductDetails(id));
   }, [dispatch, match]);
 
   const addToCartHandler = () => {
