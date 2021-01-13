@@ -29,6 +29,29 @@ export const listProductsFromProductList = (
   }
 };
 
+export const listTopRatedProducts = () => async dispatch => {
+  try {
+    dispatch({
+      type: productListActionTypes.PRODUCT_TOP_REQUEST
+    });
+
+    const { data } = await axios.get(`/api/products/top`);
+
+    dispatch({
+      type: productListActionTypes.PRODUCT_TOP_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    dispatch({
+      type: productListActionTypes.PRODUCT_TOP_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    });
+  }
+};
+
 export const createProductToProductList = () => async (dispatch, getState) => {
   try {
     dispatch({

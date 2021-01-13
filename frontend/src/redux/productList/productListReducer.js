@@ -26,6 +26,22 @@ export const productListReducer = (state = INITIAL_STATE, action) => {
   }
 };
 
+export const productTopRatedReducer = (
+  state = { loading: true, topProducts: [] },
+  action
+) => {
+  switch (action.type) {
+    case productListActionTypes.PRODUCT_TOP_REQUEST:
+      return { loading: true, topProducts: [] };
+    case productListActionTypes.PRODUCT_TOP_SUCCESS:
+      return { loading: false, topProducts: action.payload };
+    case productListActionTypes.PRODUCT_TOP_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
 export const productCreateReducer = (state = {}, action) => {
   switch (action.type) {
     case productListActionTypes.PRODUCT_CREATE_REQUEST:
