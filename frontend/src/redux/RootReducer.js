@@ -10,7 +10,8 @@ import cartReducer from './cart/cartReducer';
 import {
   orderReducer,
   orderPayReducer,
-  orderMyListReducer
+  orderMyListReducer,
+  orderListReducer
 } from './order/orderReducer';
 import {
   currentUserReducer,
@@ -33,7 +34,8 @@ const rootReducer = combineReducers({
   userInfo: userInfoReducer,
   order: orderReducer,
   orderPay: orderPayReducer,
-  orderMyList: orderMyListReducer
+  orderMyList: orderMyListReducer,
+  orderList: orderListReducer
 });
 
 export default rootReducer;
