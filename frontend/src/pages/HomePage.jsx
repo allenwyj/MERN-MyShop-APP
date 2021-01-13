@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { listProductsFromProductList } from '../redux/productList/productListActions';
 
 import Product from '../components/Product';
@@ -26,7 +27,13 @@ const HomePage = ({ match }) => {
   return (
     <React.Fragment>
       <Meta />
-      {!keyword && <ProductCarousel />}
+      {!keyword ? (
+        <ProductCarousel />
+      ) : (
+        <Link to="/" className="btn btn-outline-dark btn-sm">
+          Go Back
+        </Link>
+      )}
       <h1>Latest Products</h1>
       {loading ? (
         <Loader />
