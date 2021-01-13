@@ -24,7 +24,7 @@
     "dev": "concurrently \"yarn server\" \"yarn client\"",
     "data:import": "node backend/seeder",
     "data:clear": "node backend/seeder -d",
-    "heroku-postbuild": "YARN_PRODUCTION=false yarn install --cwd frontend && yarn run build --cwd frontend"
+    "heroku-postbuild": "YARN_PRODUCTION=false yarn install --cwd frontend && yarn --cwd frontend run build"
   },
   "devDependencies": {
     "concurrently": "^5.3.0",
