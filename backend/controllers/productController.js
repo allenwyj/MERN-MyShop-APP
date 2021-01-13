@@ -5,7 +5,16 @@ import Product from '../models/productModel.js';
 // @route   GET /api/products
 // @access  Public
 export const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({});
+  // getting ?=xxxx from url
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: 'i'
+        }
+      }
+    : {};
+  const products = await Product.find({ ...keyword });
   res.json(products);
 });
 
@@ -95,7 +104,6 @@ export const deleteProduct = asyncHandler(async (req, res) => {
 // @access  Private
 export const createProductReview = asyncHandler(async (req, res) => {
   const { rating, comment } = req.body;
-
   const product = await Product.findById(req.params.id);
 
   if (product) {

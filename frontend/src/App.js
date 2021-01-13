@@ -48,6 +48,7 @@ const App = () => {
               exact
               component={ProductEditPage}
             />
+            <Route path="/search/:keyword" component={HomePage} exact />
             <Route path="/" component={HomePage} exact />
           </Container>
         </main>

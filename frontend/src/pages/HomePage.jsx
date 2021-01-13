@@ -6,14 +6,15 @@ import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { listProductsFromProductList } from '../redux/productList/productListActions';
 
-const HomePage = () => {
+const HomePage = ({ match }) => {
+  const keyword = match.params.keyword;
   const dispatch = useDispatch();
   const productList = useSelector(state => state.productList);
   const { loading, error, products } = productList;
 
   useEffect(() => {
-    dispatch(listProductsFromProductList());
-  }, [dispatch]);
+    dispatch(listProductsFromProductList(keyword));
+  }, [dispatch, keyword]);
 
   return (
     <React.Fragment>

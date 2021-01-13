@@ -66,3 +66,18 @@ export const productDeleteReducer = (state = {}, action) => {
       return state;
   }
 };
+
+export const productReviewCreateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case productListActionTypes.PRODUCT_REVIEW_CREATE_REQUEST:
+      return { loading: true };
+    case productListActionTypes.PRODUCT_REVIEW_CREATE_SUCCESS:
+      return { loading: false, success: true };
+    case productListActionTypes.PRODUCT_REVIEW_CREATE_FAIL:
+      return { loading: false, error: action.payload };
+    case productListActionTypes.PRODUCT_REVIEW_CREATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
