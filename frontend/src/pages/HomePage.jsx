@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Col, Row } from 'react-bootstrap';
+import { listProductsFromProductList } from '../redux/productList/productListActions';
+
 import Product from '../components/Product';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
-import ProductCarousel from '../components/ProductCarousel';
 
-import { listProductsFromProductList } from '../redux/productList/productListActions';
+import ProductCarousel from '../components/ProductCarousel';
+import { Col, Row } from 'react-bootstrap';
+import Meta from '../components/Meta';
 
 const HomePage = ({ match }) => {
   const keyword = match.params.keyword;
@@ -23,6 +25,7 @@ const HomePage = ({ match }) => {
 
   return (
     <React.Fragment>
+      <Meta />
       {!keyword && <ProductCarousel />}
       <h1>Latest Products</h1>
       {loading ? (

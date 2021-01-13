@@ -27,6 +27,10 @@ h3 {
   margin: 0.1rem;
 }
 
+.pagination {
+  justify-content: center;
+}
+
 /* carousel */
 .carousel-item-next,
 .carousel-item-prev,
