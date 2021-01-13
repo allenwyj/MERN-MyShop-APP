@@ -15,16 +15,16 @@ connectDB();
 const app = express();
 
 if (process.env.NODE_ENV === 'development') {
-  // brining morgan
+  // brining morgan - logging any request into the server
   app.use(morgan('dev'));
+
+  app.get('/', (req, res) => {
+    res.send('API is running...');
+  });
 }
 
 // allows to set json data in the body
 app.use(express.json());
-
-app.get('/', (req, res) => {
-  res.send('API is running...');
-});
 
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
@@ -40,6 +40,17 @@ app.get('/api/config/paypal', (req, res) =>
 const __dirname = path.resolve();
 // making /uploads folder as a static folder, which cannot be accessed from the browser.
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
+if (process.env.NODE_ENV === 'production') {
+  // making /frontend as a static folder
+  app.use(express.static(path.join(__dirname, '/frontend/build')));
+
+  // any routes are not those api url, will point to index.html
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+  );
+} else {
+}
 
 // req can't match any api's url above:
 // having 404 error, and passing the error msg into the next middleware.
