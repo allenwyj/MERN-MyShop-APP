@@ -23,7 +23,8 @@
     "client": "yarn --cwd frontend start",
     "dev": "concurrently \"yarn server\" \"yarn client\"",
     "data:import": "node backend/seeder",
-    "data:clear": "node backend/seeder -d"
+    "data:clear": "node backend/seeder -d",
+    "heroku-postbuild": "YARN_CONFIG_PRODUCTION=false yarn add --prefix frontend && yarn build --prefix frontend"
   },
   "devDependencies": {
     "concurrently": "^5.3.0",
