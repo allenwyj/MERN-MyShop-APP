@@ -40,7 +40,8 @@ const UserListPage = ({ history }) => {
             <tr>
               <th>id</th>
               <th>user</th>
-              <th>date</th>
+              <th>email</th>
+              <th>order date</th>
               <th>total price</th>
               <th>paid</th>
               <th>delivered</th>
@@ -52,18 +53,19 @@ const UserListPage = ({ history }) => {
               <tr key={order._id}>
                 <td>{order._id}</td>
                 <td>{order.user && order.user.name}</td>
-                <td>{day(order.createAt).format('HH:MM:ss DD/MM/YYYY')}</td>
+                <td>{order.user && order.user.email}</td>
+                <td>{day(order.createdAt).format('HH:mm:ss, DD/MM/YYYY')}</td>
                 <td>${order.totalPrice}</td>
                 <td>
                   {order.isPaid ? (
-                    day(order.paidAt).format('HH:MM:ss DD/MM/YYYY')
+                    day(order.paidAt).format('HH:mm:ss, DD/MM/YYYY')
                   ) : (
                     <i className="fas fa-times" style={{ color: 'red' }}></i>
                   )}
                 </td>
                 <td>
                   {order.isDelivered ? (
-                    day(order.deliveredAt).format('HH:MM:ss DD/MM/YYYY')
+                    day(order.deliveredAt).format('HH:mm:ss, DD/MM/YYYY')
                   ) : (
                     <i className="fas fa-times" style={{ color: 'red' }}></i>
                   )}

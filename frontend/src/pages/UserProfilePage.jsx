@@ -132,11 +132,11 @@ const UserProfilePage = ({ history }) => {
               {orders.map(order => (
                 <tr key={order._id}>
                   <td>{order._id}</td>
-                  <td>{day(order.createdAt).format('DD/MM/YYYY HH:MM:ss')}</td>
+                  <td>{day(order.createdAt).format('HH:mm:ss DD/MM/YYYY')}</td>
                   <td>${order.totalPrice}</td>
                   <td>
                     {order.isPaid ? (
-                      day(order.paidAt).format('DD/MM/YYYY HH:MM:ss')
+                      day(order.paidAt).format('HH:mm:ss DD/MM/YYYY')
                     ) : (
                       <i className="fas fa-times" style={{ color: 'red' }}></i>
                     )}
