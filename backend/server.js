@@ -1,3 +1,4 @@
+import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
 import colors from 'colors';
@@ -5,6 +6,7 @@ import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
 
 dotenv.config();
@@ -21,10 +23,17 @@ app.get('/', (req, res) => {
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
 );
+
+// __dirname in nodejs points to the current directory
+// this can be used in es module if we do it in this way.
+const __dirname = path.resolve();
+// making /uploads folder as a static folder, which cannot be accessed from the browser.
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 // req can't match any api's url above:
 // having 404 error, and passing the error msg into the next middleware.
