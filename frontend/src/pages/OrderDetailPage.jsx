@@ -3,22 +3,32 @@ import axios from 'axios';
 import day from 'dayjs';
 import { PayPalButton } from 'react-paypal-button-v2';
 import { Link } from 'react-router-dom';
-import { Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
+import { Row, Col, ListGroup, Image, Card, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { getOrderDetails, payOrder } from '../redux/order/orderActions';
+import {
+  getOrderDetails,
+  payOrder,
+  deliverOrder
+} from '../redux/order/orderActions';
 import orderActionTypes from '../redux/order/orderActionTypes';
 
-const OrderDetailPage = ({ match }) => {
+const OrderDetailPage = ({ match, history }) => {
   const dispatch = useDispatch();
   const [sdkReady, setSdkReady] = useState(false);
+
+  const currentUser = useSelector(state => state.currentUser);
+  const { userInfo } = currentUser;
 
   const orderDetails = useSelector(state => state.order);
   const { order, loading, error } = orderDetails;
 
   const orderPay = useSelector(state => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
+
+  const orderDeliver = useSelector(state => state.orderDeliver);
+  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
 
   const orderId = match.params.id;
 
@@ -34,6 +44,10 @@ const OrderDetailPage = ({ match }) => {
   }, [dispatch, orderId]);
 
   useEffect(() => {
+    if (!userInfo) {
+      history.push('/login');
+    }
+
     // add paypal script into the body
     const addPaypalScript = async () => {
       const { data: clientId } = await axios.get('/api/config/paypal');
@@ -50,9 +64,12 @@ const OrderDetailPage = ({ match }) => {
       document.body.appendChild(script);
     };
 
-    if (successPay) {
+    if (!order || successPay || successDeliver) {
       // reset the orderPay state
       dispatch({ type: orderActionTypes.ORDER_PAY_RESET });
+
+      dispatch({ type: orderActionTypes.ORDER_DELIVER_RESET });
+
       // re-fetch the order details from the db
       dispatch(getOrderDetails(orderId));
     } else if (order._id && !order.isPaid) {
@@ -69,11 +86,14 @@ const OrderDetailPage = ({ match }) => {
         setSdkReady(true);
       }
     }
-  }, [orderId, order, successPay, dispatch]);
+  }, [userInfo, orderId, order, successPay, successDeliver, dispatch, history]);
 
   const successPaymentHandler = paymentResult => {
-    console.log(paymentResult);
     dispatch(payOrder(orderId, paymentResult));
+  };
+
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order));
   };
 
   return loading ? (
@@ -82,6 +102,9 @@ const OrderDetailPage = ({ match }) => {
     <Message variant="danger">{error}</Message>
   ) : (
     <React.Fragment>
+      <Link to="/admin/orderlist" className="btn btn-outline-secondary btn-sm">
+        Back
+      </Link>
       <h1>Order {order._id}</h1>
       <Row>
         <Col md={8}>
@@ -103,7 +126,8 @@ const OrderDetailPage = ({ match }) => {
               </p>
               {order.isDelivered ? (
                 <Message variant="success">
-                  Delivered on {order.deliveredAt}
+                  Delivered on{' '}
+                  {day(order.deliveredAt).format('HH:mm:ss, DD/MM/YYYY')}
                 </Message>
               ) : (
                 <Message variant="warning">Not Delivered</Message>
@@ -117,7 +141,7 @@ const OrderDetailPage = ({ match }) => {
               </p>
               {order.isPaid ? (
                 <Message variant="success">
-                  Paid on {day(order.payAt).format('HH:mm:ss DD/MM/YYYY')}
+                  Paid on {day(order.paidAt).format('HH:mm:ss, DD/MM/YYYY')}
                 </Message>
               ) : (
                 <Message variant="warning">Not Paid</Message>
@@ -156,12 +180,14 @@ const OrderDetailPage = ({ match }) => {
             </ListGroup.Item>
           </ListGroup>
         </Col>
+
         <Col md={4}>
           <Card>
             <ListGroup variant="flush">
               <ListGroup.Item>
                 <h2>Order Summary</h2>
               </ListGroup.Item>
+
               <ListGroup.Item>
                 <Row>
                   <Col>Created At</Col>
@@ -170,30 +196,35 @@ const OrderDetailPage = ({ match }) => {
                   </Col>
                 </Row>
               </ListGroup.Item>
+
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
                   <Col>${order.itemsPrice}</Col>
                 </Row>
               </ListGroup.Item>
+
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
                   <Col>${order.shippingPrice}</Col>
                 </Row>
               </ListGroup.Item>
+
               <ListGroup.Item>
                 <Row>
                   <Col>GST</Col>
                   <Col>${order.gstPrice}</Col>
                 </Row>
               </ListGroup.Item>
+
               <ListGroup.Item>
                 <Row>
                   <Col>Total</Col>
                   <Col>${order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
+
               {!order.isPaid && (
                 <ListGroup.Item>
                   {loadingPay && <Loader />}
@@ -207,6 +238,24 @@ const OrderDetailPage = ({ match }) => {
                   )}
                 </ListGroup.Item>
               )}
+
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered &&
+                (loadingDeliver ? (
+                  <Loader />
+                ) : (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={deliverHandler}
+                    >
+                      Mark as Delivered
+                    </Button>
+                  </ListGroup.Item>
+                ))}
             </ListGroup>
           </Card>
         </Col>
