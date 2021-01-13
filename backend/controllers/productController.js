@@ -6,7 +6,7 @@ import Product from '../models/productModel.js';
 // @access  Public
 export const getProducts = asyncHandler(async (req, res) => {
   // the number of items shown on one page
-  const pageSize = 2;
+  const pageSize = 4;
   const page = Number(req.query.pageNumber) || 1;
 
   // getting ?=xxxx from url
