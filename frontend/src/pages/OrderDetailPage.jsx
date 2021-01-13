@@ -102,9 +102,9 @@ const OrderDetailPage = ({ match, history }) => {
     <Message variant="danger">{error}</Message>
   ) : (
     <React.Fragment>
-      <Link to="/admin/orderlist" className="btn btn-outline-secondary btn-sm">
+      <Button size="sm" variant="outline-dark" onClick={history.goBack}>
         Back
-      </Link>
+      </Button>
       <h1>Order {order._id}</h1>
       <Row>
         <Col md={8}>
@@ -242,20 +242,18 @@ const OrderDetailPage = ({ match, history }) => {
               {userInfo &&
                 userInfo.isAdmin &&
                 order.isPaid &&
-                !order.isDelivered &&
-                (loadingDeliver ? (
-                  <Loader />
-                ) : (
+                !order.isDelivered && (
                   <ListGroup.Item>
                     <Button
                       type="button"
                       className="btn btn-block"
-                      onClick={deliverHandler}
+                      disabled={loadingDeliver}
+                      onClick={!loadingDeliver ? deliverHandler : null}
                     >
-                      Mark as Delivered
+                      {loadingDeliver ? 'Loading...' : 'Mark as Delivered'}
                     </Button>
                   </ListGroup.Item>
-                ))}
+                )}
             </ListGroup>
           </Card>
         </Col>

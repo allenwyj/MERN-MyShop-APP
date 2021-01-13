@@ -143,10 +143,7 @@ const UserProfilePage = ({ history }) => {
                   </td>
                   <td>
                     {order.isDelivered ? (
-                      <>
-                        <Row>{order.isDelivered}</Row>
-                        <Row>{order.isDelivered}</Row>
-                      </>
+                      day(order.deliveredAt).format('HH:mm:ss DD/MM/YYYY')
                     ) : (
                       <i className="fas fa-times" style={{ color: 'red' }}></i>
                     )}
