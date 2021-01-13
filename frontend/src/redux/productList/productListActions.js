@@ -1,13 +1,18 @@
 import axios from 'axios';
 import productListActionTypes from './productListActionTypes';
 
-export const listProductsFromProductList = (keyword = '') => async dispatch => {
+export const listProductsFromProductList = (
+  keyword = '',
+  pageNumber = ''
+) => async dispatch => {
   try {
     dispatch({
       type: productListActionTypes.PRODUCT_LIST_REQUEST
     });
 
-    const { data } = await axios.get(`/api/products?keyword=${keyword}`);
+    const { data } = await axios.get(
+      `/api/products?keyword=${keyword}&pageNumber=${pageNumber}`
+    );
 
     dispatch({
       type: productListActionTypes.PRODUCT_LIST_SUCCESS,
