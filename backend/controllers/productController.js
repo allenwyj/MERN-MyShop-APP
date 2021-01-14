@@ -31,7 +31,7 @@ export const getProducts = asyncHandler(async (req, res) => {
 // @route   GET /api/products/:id
 // @access  Public
 export const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.id).select('-reviews');
   if (product) {
     res.json(product);
   } else {
@@ -104,6 +104,20 @@ export const deleteProduct = asyncHandler(async (req, res) => {
     res.json({ message: 'Product removed' });
   } else {
     res.status(404);
+    throw new Error('Product not found');
+  }
+});
+
+// @desc    Fetch single product reviews
+// @route   GET /api/products//reviews
+// @access  Public
+export const getProductReviews = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (product) {
+    res.json(product.reviews);
+  } else {
+    res.status(404);
+    // throws error and gets it handled by errorHandler
     throw new Error('Product not found');
   }
 });
