@@ -166,6 +166,28 @@ export const deleteProductFromProductList = id => async (
   }
 };
 
+export const getProductReviews = productId => async dispatch => {
+  try {
+    dispatch({
+      type: productListActionTypes.PRODUCT_REVIEWS_GET_REQUEST
+    });
+    const { data } = await axios.get(`/api/products/${productId}/reviews`);
+
+    dispatch({
+      type: productListActionTypes.PRODUCT_REVIEWS_GET_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    dispatch({
+      type: productListActionTypes.PRODUCT_REVIEWS_GET_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    });
+  }
+};
+
 export const createProductReview = (productId, review) => async (
   dispatch,
   getState
