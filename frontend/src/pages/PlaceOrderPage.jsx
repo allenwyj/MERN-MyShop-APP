@@ -6,6 +6,7 @@ import Message from '../components/Message';
 import CheckoutSteps from '../components/CheckoutSteps';
 import { createOrder } from '../redux/order/orderActions';
 import orderActionTypes from '../redux/order/orderActionTypes';
+import cartActionTypes from '../redux/cart/cartActionTypes';
 
 const PlaceOrderPage = ({ history }) => {
   const dispatch = useDispatch();
@@ -14,7 +15,6 @@ const PlaceOrderPage = ({ history }) => {
 
   useEffect(() => {
     return () => {
-      console.log('place order page reset');
       dispatch({ type: orderActionTypes.ORDER_RESET });
     };
   }, [dispatch]);
@@ -22,6 +22,7 @@ const PlaceOrderPage = ({ history }) => {
   // jump to the order detail page if placing order is successful
   useEffect(() => {
     if (success) {
+      dispatch({ type: cartActionTypes.CART_CLEAR });
       history.push(`/order/${order._id}`);
     }
     // eslint-disable-next-line

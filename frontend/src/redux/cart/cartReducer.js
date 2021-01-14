@@ -45,6 +45,11 @@ const cartReducer = (state = INITIAL_STATE, action) => {
         ...state,
         paymentMethod: action.payload
       };
+    case cartActionTypes.CART_CLEAR:
+      return {
+        cartItems: [],
+        shippingAddress: { address: '', suburb: '', postcode: '', country: '' }
+      };
     default:
       return state;
   }
