@@ -58,6 +58,15 @@ export const addOrderItems = asyncHandler(async (req, res) => {
 
       const createdOrder = await order.save();
 
+      for (const index in orderItems) {
+        const item = orderItems[index];
+        const product = await Product.findById(item.product);
+        if (product) {
+          product.countInStock -= item.qty;
+          await product.save();
+        }
+      }
+
       res.status(201).json(createdOrder);
     } else {
       outOfStockList.hasValue = true;
