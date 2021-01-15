@@ -1,5 +1,28 @@
 import asyncHandler from 'express-async-handler';
 import Order from '../models/orderModel.js';
+import Product from '../models/productModel.js';
+
+const getShortOfStocksItems = async orderItems => {
+  const shortStockMap = {};
+
+  await Promise.all(
+    orderItems.map(async item => {
+      try {
+        const productId = item.product;
+        const foundProduct = await Product.findById(productId);
+        const productInStocks = foundProduct.countInStock;
+        // add into object if qty > countInStock
+        if (productInStocks < item.qty) {
+          shortStockMap[productId] = foundProduct.name;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })
+  );
+
+  return shortStockMap;
+};
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -16,26 +39,36 @@ export const addOrderItems = asyncHandler(async (req, res) => {
   } = req.body;
 
   // check orderItems is not empty
-  if (orderItems && orderItems.length === 0) {
+  if (orderItems && orderItems.length !== 0) {
+    // check order items' stocks
+    const lessStockList = await getShortOfStocksItems(orderItems);
+
+    if (Object.keys(lessStockList).length === 0) {
+      // instantiate a new order
+      const order = new Order({
+        orderItems,
+        user: req.user._id,
+        shippingAddress,
+        paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        gstPrice,
+        totalPrice
+      });
+
+      const createdOrder = await order.save();
+
+      res.status(201).json(createdOrder);
+    } else {
+      lessStockList.hasValue = true;
+      // order items' stock cannot be fullfilled
+      res.status(400);
+      // return an object contains out of stock item: {productId: productName}
+      throw new Error(JSON.stringify(lessStockList));
+    }
+  } else {
     res.status(400);
     throw new Error('No order items');
-    return;
-  } else {
-    // instantiate a new order
-    const order = new Order({
-      orderItems,
-      user: req.user._id,
-      shippingAddress,
-      paymentMethod,
-      itemsPrice,
-      shippingPrice,
-      gstPrice,
-      totalPrice
-    });
-
-    const createdOrder = await order.save();
-
-    res.status(201).json(createdOrder);
   }
 });
 

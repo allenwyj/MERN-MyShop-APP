@@ -23,10 +23,32 @@ const PlaceOrderPage = ({ history }) => {
   useEffect(() => {
     if (success) {
       dispatch({ type: cartActionTypes.CART_CLEAR });
+      localStorage.setItem('cartItems', '[]');
       history.push(`/order/${order._id}`);
     }
     // eslint-disable-next-line
   }, [history, success]);
+
+  // Check whether the error from api is normal error text,
+  // or, it's the out of stock error
+  const errorInStocks = error => {
+    error = typeof error !== 'string' ? JSON.stringify(error) : error;
+    try {
+      error = JSON.parse(error);
+    } catch (e) {
+      return false;
+    }
+
+    // if error is an object, not null and contains hasValue property
+    if (typeof error === 'object' && error && error.hasValue) {
+      console.log(error.hasValue);
+      delete error.hasValue;
+      const shortInStockItemNames = Object.values(error);
+      return shortInStockItemNames;
+    }
+
+    return false;
+  };
 
   // calculate total prices in the cart
   const addDecimals = num => {
@@ -150,7 +172,14 @@ const PlaceOrderPage = ({ history }) => {
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
-                {error && <Message variant="danger">{error}</Message>}
+                {error && errorInStocks(error) ? (
+                  <Message variant="danger">
+                    Out of stock: {' '}
+                    {errorInStocks(error).join()}
+                  </Message>
+                ) : error ? (
+                  <Message variant="danger">{error}</Message>
+                ) : null}
               </ListGroup.Item>
               <ListGroup.Item>
                 <Button
