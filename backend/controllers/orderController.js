@@ -41,9 +41,9 @@ export const addOrderItems = asyncHandler(async (req, res) => {
   // check orderItems is not empty
   if (orderItems && orderItems.length !== 0) {
     // check order items' stocks
-    const lessStockList = await getShortOfStocksItems(orderItems);
+    const outOfStockList = await getShortOfStocksItems(orderItems);
 
-    if (Object.keys(lessStockList).length === 0) {
+    if (Object.keys(outOfStockList).length === 0) {
       // instantiate a new order
       const order = new Order({
         orderItems,
@@ -60,11 +60,11 @@ export const addOrderItems = asyncHandler(async (req, res) => {
 
       res.status(201).json(createdOrder);
     } else {
-      lessStockList.hasValue = true;
+      outOfStockList.hasValue = true;
       // order items' stock cannot be fullfilled
       res.status(400);
       // return an object contains out of stock item: {productId: productName}
-      throw new Error(JSON.stringify(lessStockList));
+      throw new Error(JSON.stringify(outOfStockList));
     }
   } else {
     res.status(400);
