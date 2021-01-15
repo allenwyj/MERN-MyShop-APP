@@ -11,9 +11,11 @@ import cartActionTypes from '../redux/cart/cartActionTypes';
 const PlaceOrderPage = ({ history }) => {
   const dispatch = useDispatch();
   const cart = useSelector(state => state.cart);
-  const { order, success, error } = useSelector(state => state.order);
+  const { order, loading, success, error } = useSelector(state => state.order);
 
   useEffect(() => {
+    dispatch({ type: orderActionTypes.ORDER_PAGE_INITIAL_FINISH });
+
     return () => {
       dispatch({ type: orderActionTypes.ORDER_RESET });
     };
@@ -174,8 +176,7 @@ const PlaceOrderPage = ({ history }) => {
               <ListGroup.Item>
                 {error && errorInStocks(error) ? (
                   <Message variant="danger">
-                    Out of stock: {' '}
-                    {errorInStocks(error).join()}
+                    Out of stock: {errorInStocks(error).join()}
                   </Message>
                 ) : error ? (
                   <Message variant="danger">{error}</Message>
@@ -185,10 +186,10 @@ const PlaceOrderPage = ({ history }) => {
                 <Button
                   type="button"
                   className="btn-block"
-                  disabled={cart.cartItems === 0}
+                  disabled={cart.cartItems === 0 || loading}
                   onClick={placeOrderHandler}
                 >
-                  Place Order
+                  {loading ? 'Submitting...' : 'Place Order'}
                 </Button>
               </ListGroup.Item>
             </ListGroup>

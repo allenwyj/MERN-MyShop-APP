@@ -1,7 +1,7 @@
 import orderActionTypes from './orderActionTypes';
 
 const INITIAL_STATE = {
-  loading: true, // loading until it fetches data.
+  loading: true, // order details page: loading until it fetches data.
   error: null,
   success: false,
   order: { orderItems: [], shippingAddress: {} }
@@ -9,6 +9,11 @@ const INITIAL_STATE = {
 
 export const orderReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case orderActionTypes.ORDER_PAGE_INITIAL_FINISH:
+      return {
+        ...state,
+        loading: false
+      };
     case orderActionTypes.ORDER_CREATE_REQUEST:
     case orderActionTypes.ORDER_DETAILS_REQUEST:
       return {
