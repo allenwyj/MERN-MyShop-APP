@@ -35,7 +35,6 @@ const OrderDetailPage = ({ match, history }) => {
   // add paypal script into the body
   const addPaypalScript = async () => {
     const { data: clientId } = await axios.get('/api/config/paypal');
-    console.log('Adding Paypal Script');
 
     // create script tag
     const script = document.createElement('script');
@@ -56,61 +55,40 @@ const OrderDetailPage = ({ match, history }) => {
     dispatch(deliverOrder(order));
   };
 
+  // componentDidMount
   useEffect(() => {
-    // fetch the order details when the component is mounted
-    dispatch(getOrderDetails(orderId));
-    console.log('mounted');
-
     // reset the order reducer
     return () => {
-      console.log('detail page reset');
       dispatch({ type: orderActionTypes.ORDER_RESET });
     };
   }, [dispatch, orderId]);
 
   useEffect(() => {
-    console.log('inside');
-    console.log(order);
     if (!userInfo) {
       history.push('/login');
     }
 
-    if (!order || successPay || successDeliver) {
-      console.log('dispatch here');
+    if (!order || successPay || successDeliver || order._id !== orderId) {
       // reset the orderPay state
       dispatch({ type: orderActionTypes.ORDER_PAY_RESET });
-
       dispatch({ type: orderActionTypes.ORDER_DELIVER_RESET });
 
       // re-fetch the order details from the db
       dispatch(getOrderDetails(orderId));
-    } else if (order._id && !order.isPaid) {
-      console.log('Checking paypal adding...');
+    } else if (!order.isPaid) {
       // If paypal script is not added into the body tag
+
       if (!window.paypal) {
-        console.log('im adding script!');
         addPaypalScript();
 
         // paypal script tag is already in the body tag
       } else {
-        console.log('Paypal is already in.');
         // happens when user paid and checkout for other products,
         // change the component state into true.
-        !sdkReady && setSdkReady(true);
+        setSdkReady(true);
       }
-    } else {
-      console.log('我进来了，我又走了');
     }
-  }, [
-    userInfo,
-    orderId,
-    order,
-    successPay,
-    successDeliver,
-    sdkReady,
-    dispatch,
-    history
-  ]);
+  }, [userInfo, orderId, order, successPay, successDeliver, dispatch, history]);
 
   return loading ? (
     <Loader />

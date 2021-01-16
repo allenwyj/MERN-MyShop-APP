@@ -17,6 +17,8 @@ const PlaceOrderPage = ({ history }) => {
     dispatch({ type: orderActionTypes.ORDER_PAGE_INITIAL_FINISH });
 
     return () => {
+      // cleanup the status of order_create if user leaves place order page
+      // with error message or change of mind.
       dispatch({ type: orderActionTypes.ORDER_RESET });
     };
   }, [dispatch]);
@@ -26,6 +28,8 @@ const PlaceOrderPage = ({ history }) => {
     if (success) {
       dispatch({ type: cartActionTypes.CART_CLEAR });
       localStorage.setItem('cartItems', '[]');
+      dispatch({ type: orderActionTypes.ORDER_RESET });
+
       history.push(`/order/${order._id}`);
     }
     // eslint-disable-next-line
