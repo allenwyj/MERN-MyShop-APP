@@ -107,8 +107,13 @@ const ProductPage = ({ history, match }) => {
                             {/* create and spread an new array with qty, and keys() 
                               returns a new Array Iterator object 
                               that contains the keys for each index in the array */}
-                            {[...Array(product.countInStock).keys()].map(x => (
-                              // BUG: default selected
+                            {(product.countInStock >= 10
+                              ? [...Array(product.countInStock).keys()].slice(
+                                  0,
+                                  10
+                                )
+                              : [...Array(product.countInStock).keys()]
+                            ).map(x => (
                               <option key={x + 1} value={x + 1}>
                                 {x + 1}
                               </option>
