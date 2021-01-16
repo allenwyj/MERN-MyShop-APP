@@ -6,6 +6,7 @@ import axios from 'axios';
 import { listProductDetails } from '../../redux/productDetails/productDetailsActions';
 import { updateProductFromProductList } from '../../redux/productList/productListActions';
 import productListActionTypes from '../../redux/productList/productListActionTypes';
+import productDetailsActionTypes from '../../redux/productDetails/productDetailsActionTypes';
 
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
@@ -39,6 +40,7 @@ const ProductEditPage = ({ history, match }) => {
   useEffect(() => {
     if (successUpdate) {
       dispatch({ type: productListActionTypes.PRODUCT_UPDATE_RESET });
+      dispatch({ type: productDetailsActionTypes.PRODUCT_DETAILS_RESET });
       // redirect to the product list
       history.push('/admin/productlist');
     } else {
@@ -82,6 +84,7 @@ const ProductEditPage = ({ history, match }) => {
 
   const submitHandler = e => {
     e.preventDefault();
+
     // update product
     dispatch(
       updateProductFromProductList({
@@ -167,6 +170,7 @@ const ProductEditPage = ({ history, match }) => {
               <Form.Label>Count In Stock</Form.Label>
               <Form.Control
                 type="number"
+                min="0"
                 placeholder="Enter countInStock"
                 value={countInStock}
                 onChange={e => setCountInStock(e.target.value)}
@@ -179,7 +183,11 @@ const ProductEditPage = ({ history, match }) => {
                 type="text"
                 placeholder="Enter category"
                 value={category}
-                onChange={e => setCategory(e.target.value)}
+                onChange={e => {
+                  e.target.value < 0
+                    ? setCategory(0)
+                    : setCategory(e.target.value);
+                }}
               ></Form.Control>
             </Form.Group>
 

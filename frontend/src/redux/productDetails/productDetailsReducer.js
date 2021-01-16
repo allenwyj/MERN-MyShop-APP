@@ -12,6 +12,8 @@ const productDetailsReducer = (state = INITIAL_STATE, action) => {
       return { ...state, loading: false, product: action.payload, error: null };
     case productDetailsActionTypes.PRODUCT_DETAILS_FAIL:
       return { ...state, loading: false, error: action.payload };
+    case productDetailsActionTypes.PRODUCT_DETAILS_RESET:
+      return { ...INITIAL_STATE };
     default:
       return state;
   }
