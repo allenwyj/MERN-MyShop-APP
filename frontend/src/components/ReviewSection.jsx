@@ -54,7 +54,7 @@ const ReviewSection = () => {
       // refetching reviews after the creation
       dispatch(getProductReviews(id));
     }
-  }, [dispatch, successCreate]);
+  }, [dispatch, id, successCreate]);
 
   const submitHandler = e => {
     e.preventDefault();
