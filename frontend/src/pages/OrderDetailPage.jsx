@@ -32,9 +32,34 @@ const OrderDetailPage = ({ match, history }) => {
 
   const orderId = match.params.id;
 
+  // add paypal script into the body
+  const addPaypalScript = async () => {
+    const { data: clientId } = await axios.get('/api/config/paypal');
+    console.log('Adding Paypal Script');
+
+    // create script tag
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+    script.async = true;
+    script.onload = () => {
+      setSdkReady(true);
+    };
+    document.body.appendChild(script);
+  };
+
+  const successPaymentHandler = paymentResult => {
+    dispatch(payOrder(orderId, paymentResult));
+  };
+
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order));
+  };
+
   useEffect(() => {
     // fetch the order details when the component is mounted
     dispatch(getOrderDetails(orderId));
+    console.log('mounted');
 
     // reset the order reducer
     return () => {
@@ -44,27 +69,14 @@ const OrderDetailPage = ({ match, history }) => {
   }, [dispatch, orderId]);
 
   useEffect(() => {
+    console.log('inside');
+    console.log(order);
     if (!userInfo) {
       history.push('/login');
     }
 
-    // add paypal script into the body
-    const addPaypalScript = async () => {
-      const { data: clientId } = await axios.get('/api/config/paypal');
-      console.log('Adding Paypal Script');
-
-      // create script tag
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
-      script.async = true;
-      script.onload = () => {
-        setSdkReady(true);
-      };
-      document.body.appendChild(script);
-    };
-
     if (!order || successPay || successDeliver) {
+      console.log('dispatch here');
       // reset the orderPay state
       dispatch({ type: orderActionTypes.ORDER_PAY_RESET });
 
@@ -76,6 +88,7 @@ const OrderDetailPage = ({ match, history }) => {
       console.log('Checking paypal adding...');
       // If paypal script is not added into the body tag
       if (!window.paypal) {
+        console.log('im adding script!');
         addPaypalScript();
 
         // paypal script tag is already in the body tag
@@ -83,18 +96,21 @@ const OrderDetailPage = ({ match, history }) => {
         console.log('Paypal is already in.');
         // happens when user paid and checkout for other products,
         // change the component state into true.
-        setSdkReady(true);
+        !sdkReady && setSdkReady(true);
       }
+    } else {
+      console.log('我进来了，我又走了');
     }
-  }, [userInfo, orderId, order, successPay, successDeliver, dispatch, history]);
-
-  const successPaymentHandler = paymentResult => {
-    dispatch(payOrder(orderId, paymentResult));
-  };
-
-  const deliverHandler = () => {
-    dispatch(deliverOrder(order));
-  };
+  }, [
+    userInfo,
+    orderId,
+    order,
+    successPay,
+    successDeliver,
+    sdkReady,
+    dispatch,
+    history
+  ]);
 
   return loading ? (
     <Loader />

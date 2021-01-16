@@ -20,6 +20,8 @@ const HomePage = ({ match }) => {
   const productList = useSelector(state => state.productList);
   const { loading, error, products, page, pages } = productList;
 
+  // TODO: reset loading = true
+
   useEffect(() => {
     dispatch(listProductsFromProductList(keyword, pageNumber));
   }, [dispatch, keyword, pageNumber]);
@@ -27,19 +29,19 @@ const HomePage = ({ match }) => {
   return (
     <React.Fragment>
       <Meta />
-      {!keyword ? (
-        <ProductCarousel />
-      ) : (
-        <Link to="/" className="btn btn-outline-dark btn-sm">
-          Go Back
-        </Link>
-      )}
       {loading ? (
         <Loader />
       ) : error ? (
         <Message variant={'danger'}>{error}</Message>
       ) : (
         <>
+          {!keyword ? (
+            <ProductCarousel />
+          ) : (
+            <Link to="/" className="btn btn-outline-dark btn-sm">
+              Go Back
+            </Link>
+          )}
           <h1>Latest Products</h1>
           <Row>
             {products.map(product => (

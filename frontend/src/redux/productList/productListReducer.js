@@ -2,7 +2,7 @@ import productListActionTypes from './productListActionTypes';
 
 const INITIAL_STATE = {
   products: [],
-  loading: false,
+  loading: true,
   error: null
 };
 
@@ -94,7 +94,6 @@ export const productReviewsReducer = (state = { reviews: [] }, action) => {
         ...state,
         isLoading: false,
         error: null,
-        success: true,
         reviews: action.payload
       };
     case productListActionTypes.PRODUCT_REVIEWS_GET_FAIL:
