@@ -136,7 +136,7 @@ const ProductList = ({ history, match }) => {
             pages={pages}
             page={page}
             isAdmin
-            paginateList={'productList'}
+            paginateList={'productlist'}
           />
         </React.Fragment>
       )}

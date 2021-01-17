@@ -20,8 +20,6 @@ const HomePage = ({ match }) => {
   const productList = useSelector(state => state.productList);
   const { loading, error, products, page, pages } = productList;
 
-  // TODO: reset loading = true
-
   useEffect(() => {
     dispatch(listProductsFromProductList(keyword, pageNumber));
   }, [dispatch, keyword, pageNumber]);

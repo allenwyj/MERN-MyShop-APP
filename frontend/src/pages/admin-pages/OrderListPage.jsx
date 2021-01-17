@@ -31,13 +31,13 @@ const UserListPage = ({ history, match }) => {
 
   return (
     <React.Fragment>
-      <h1>Orders</h1>
       {loading ? (
         <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
         <>
+          <h1>Orders</h1>
           <Table striped bordered hover responsive size="sm">
             <thead>
               <tr>
@@ -88,7 +88,7 @@ const UserListPage = ({ history, match }) => {
             pages={pages}
             page={page}
             isAdmin
-            paginateList={'orderList'}
+            paginateList={'orderlist'}
           />
         </>
       )}
