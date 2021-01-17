@@ -2,7 +2,7 @@
 
 > eCommerce platform built with the MERN stack & Redux.
 
-This is the course project for learning MERN
+This is the course project for learning MERN. [DEMO](https://allen-myshop.herokuapp.com/)
 
 ## Features
 
