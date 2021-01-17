@@ -78,9 +78,11 @@ const ProductList = ({ history, match }) => {
           <h1>Products</h1>
         </Col>
         <Col className="text-right">
-          {!loading && (<Button className="my-3" onClick={createProductHandler}>
-            <i className="fas fa-plus"></i> Create Product
-          </Button>)}
+          {!loading && (
+            <Button className="my-3" onClick={createProductHandler}>
+              <i className="fas fa-plus"></i> Create Product
+            </Button>
+          )}
         </Col>
       </Row>
       {loadingDelete && <Loader />}
@@ -130,7 +132,12 @@ const ProductList = ({ history, match }) => {
               ))}
             </tbody>
           </Table>
-          <Paginate pages={pages} page={page} isAdmin />
+          <Paginate
+            pages={pages}
+            page={page}
+            isAdmin
+            paginateList={'productList'}
+          />
         </React.Fragment>
       )}
     </React.Fragment>
