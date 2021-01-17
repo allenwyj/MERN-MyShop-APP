@@ -149,8 +149,6 @@ export const updateOrderToDelivered = asyncHandler(async (req, res) => {
 // @route   GET /api/orders/myorders
 // @access  Private
 export const getMyOrders = asyncHandler(async (req, res) => {
-  console.log('fecth');
-
   // only for the login user
   const orders = await Order.find({ user: req.user._id });
   res.json(orders);
@@ -160,7 +158,17 @@ export const getMyOrders = asyncHandler(async (req, res) => {
 // @route   GET /api/orders
 // @access  Private/Admin
 export const getOrders = asyncHandler(async (req, res) => {
-  // getting id and name from user field
-  const orders = await Order.find({}).populate('user', 'id name email');
-  res.json(orders);
+  // the number of items shown on one page
+  const pageSize = 10;
+  const page = Number(req.query.pageNumber) || 1;
+
+  // gets 10 orders per time, skips 10 * (page-1) orders
+  const orders = await Order.find({})
+    .limit(pageSize)
+    .skip(pageSize * (page - 1))
+    .populate('user', 'id name email');
+
+  const count = await Order.countDocuments({});
+
+  res.json({ orders, page, pages: Math.ceil(count / pageSize) });
 });
