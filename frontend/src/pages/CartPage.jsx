@@ -66,7 +66,10 @@ const CartPage = ({ match, location, history }) => {
                         )
                       }
                     >
-                      {[...Array(item.countInStock).keys()].map(index => (
+                      {(item.countInStock >= 10
+                        ? [...Array(item.countInStock).keys()].slice(0, 10)
+                        : [...Array(item.countInStock).keys()]
+                      ).map(index => (
                         <option key={index + 1} value={index + 1}>
                           {index + 1}
                         </option>

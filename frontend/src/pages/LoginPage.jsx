@@ -61,7 +61,7 @@ const LoginPage = ({ history, location }) => {
           ></Form.Control>
         </Form.Group>
         {/* TODO: add address form */}
-        <Button type="submit" variant="primary">
+        <Button type="submit" variant="primary" disabled={loading}>
           Sign In
         </Button>
       </Form>

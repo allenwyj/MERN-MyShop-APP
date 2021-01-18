@@ -88,7 +88,7 @@ const RegisterPage = ({ history, location }) => {
           ></Form.Control>
         </Form.Group>
         {/* TODO: add address form */}
-        <Button type="submit" variant="primary">
+        <Button type="submit" variant="primary" disabled={loading}>
           Register
         </Button>
       </Form>
